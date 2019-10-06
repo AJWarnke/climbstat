@@ -49,7 +49,7 @@ names(ascents)[which(names(ascents)=="id")] = "route_id"
 #
 dat = merge(ascents,climber,by="user_id",all=F)
 #
-#22437
+#
 grades_label = data.frame(
 	"grade_id"=c(13,15,17,21,23,25,29,31,33,36,38,40,42,44,46,49,51,53,55,57,59,62,64,66,68,70,72,75,77,79,81,83),
 	"grade"=c("3a","3b","3c","4a","4b","4c","5a","5b","5c","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"),
