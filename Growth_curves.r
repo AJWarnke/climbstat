@@ -1,17 +1,6 @@
 rm(list=ls(all=TRUE))
 # Set Language
 Sys.setenv(LANGUAGE="en")
-# Set Working Directory
-if(Sys.info()["nodename"]=="H423DF72" | Sys.info()["nodename"]=="H5CD9074XD1"){
-	setwd("C:/Users/WarnkeAJ/OneDrive - BASF/Projects/Other/Run")
-	.libPaths(c("C:/Users/WarnkeAJ/Documents/R/R-3.4.1/library", .libPaths()))
-}
-#
-if(Sys.info()["nodename"]=="HD39L3K2"){
-	#setwd("Z:/Run/")
-	setwd("C:/Run")
-	#.libPaths(c("C:/Program Files/R/R-3.4.1/library", .libPaths()))
-}
 #
 options(tibble.width = Inf)
 options(width=250)
@@ -141,30 +130,3 @@ png("Growth.png",width=800,height=600)
 	legend("bottom",c("males","females"),col=c("blue","red"),lwd=5,cex=1.5)
 dev.off()
 #
-#
-ondra = which(coef_growth$user_id==1476)
-tmp = c(coef_growth$min_experience[ondra]:coef_growth$max_experience[ondra])
-lines(tmp,as.numeric(fixef(reg_gr)) + ( coef_growth$intercept[ondra] + coef_growth$intercept_sex[ondra]) + ( coef_growth$exp[ondra] + coef_growth$exp_sex[ondra] ) * c(tmp) + ( coef_growth$exp2[ondra] + coef_growth$exp2_sex[ondra] ) * (tmp^2) ,lwd=5 ,col=brewer.pal(5,"Set1")[1])
-#with(subset(gr,user_id==1476),lines(experience,grade_index2,type="p",pch=15,col="purple"))
-#
-ghisolfi = which(coef_growth$user_id==22437)
-tmp = c(coef_growth$min_experience[ghisolfi]:coef_growth$max_experience[ghisolfi])
-lines(tmp,as.numeric(fixef(reg_gr)) + ( coef_growth$intercept[ghisolfi] + coef_growth$intercept_sex[ghisolfi]) + ( coef_growth$exp[ghisolfi] + coef_growth$exp_sex[ghisolfi] ) * c(tmp) + ( coef_growth$exp2[ghisolfi] + coef_growth$exp2_sex[ghisolfi] ) * (tmp^2) ,lwd=5 ,col=brewer.pal(5,"Set1")[2])
-#with(subset(gr,user_id==1476),lines(experience,grade_index2,type="p",pch=15,col="orange"))
-#
-bertle = which(coef_growth$user_id==1721)
-tmp = c(coef_growth$min_experience[bertle]:coef_growth$max_experience[bertle])
-lines(tmp,as.numeric(fixef(reg_gr)) + ( coef_growth$intercept[bertle] + coef_growth$intercept_sex[bertle]) + ( coef_growth$exp[bertle] + coef_growth$exp_sex[bertle] ) * c(tmp) + ( coef_growth$exp2[bertle] + coef_growth$exp2_sex[bertle] ) * (tmp^2) ,lwd=5 ,col=brewer.pal(5,"Set1")[3])
-#with(subset(gr,user_id==1476),lines(experience,grade_index2,type="p",pch=15,col="purple"))
-#
-rullo = which(coef_growth$user_id==53883)
-tmp = c(coef_growth$min_experience[rullo]:coef_growth$max_experience[rullo])
-lines(tmp,as.numeric(fixef(reg_gr)) + ( coef_growth$intercept[rullo] + coef_growth$intercept_sex[rullo]) + ( coef_growth$exp[rullo] + coef_growth$exp_sex[rullo] ) * c(tmp) + ( coef_growth$exp2[rullo] + coef_growth$exp2_sex[rullo] ) * (tmp^2) ,lwd=5 ,col=brewer.pal(5,"Set1")[4])
-#with(subset(gr,user_id==1476),lines(experience,grade_index2,type="p",pch=15,col="purple"))
-#
-kinder = which(coef_growth$user_id==476)
-tmp = c(coef_growth$min_experience[kinder]:coef_growth$max_experience[kinder])
-lines(tmp,as.numeric(fixef(reg_gr)) + ( coef_growth$intercept[kinder] + coef_growth$intercept_sex[kinder]) + ( coef_growth$exp[kinder] + coef_growth$exp_sex[kinder] ) * c(tmp) + ( coef_growth$exp2[kinder] + coef_growth$exp2_sex[kinder] ) * (tmp^2) ,lwd=5 ,col=brewer.pal(5,"Set1")[5])
-#with(subset(gr,user_id==1476),lines(experience,grade_index2,type="p",pch=15,col="purple"))
-#
-legend("bottom",c("Adam Ondra","Stefano Ghisolfi","Primin Bertle","Jorge Diaz-Rullo","Joe Kinder"),col=brewer.pal(5,"Set1"))
