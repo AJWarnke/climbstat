@@ -4,6 +4,12 @@ Sys.setenv(LANGUAGE="en")
 #
 source("system.r")
 #
+plot_line = function(user=x,col=1) {
+	tmp_data = which(coef_growth$user_id==user)
+	tmp = c(coef_growth$min_experience[tmp_data]:coef_growth$max_experience[tmp_data])
+	lines(tmp, as.numeric(fixef(reg_gr)) + coef_growth$intercept[tmp_data] + coef_growth$exp[tmp_data] * tmp + coef_growth$exp2[tmp_data] * (tmp^2) + coef_growth$exp3[tmp_data] * (tmp^3) ,lwd=5 ,col=brewer.pal(8,"Set1")[col])
+}
+#
 options(tibble.width = Inf)
 options(width=250)
 # Load packages
@@ -92,7 +98,8 @@ coef_growth = merge(coef_growth,gr[!duplicated(gr$user_id),c("user_id","sex","ex
 coef_growth = coef_growth[complete.cases(coef_growth),]
 #
 png("Growth_elites.png",width=800,height=600)
-	plot(NA,xlim=c(0,20),ylim=c(5,9),xlab="Experience",ylab="Grade",yaxt="n",xaxt="n",cex.lab=1.5)
+	par(mar=c(5.1, 4.1, 4.1, 4.1))
+	plot(NA,xlim=c(0,20),ylim=c(5,9.15),xlab="Experience",ylab="Grade",yaxt="n",xaxt="n",cex.lab=1.5)
 	axis(1, seq(0,20,1), at = seq(0,20,1), las=1,cex.axis=1.25)
 	#axis(2, c("5a","6a","6b+","7a","7b+","8a","8b+","9a"), at=grades_label[which(grades_label$grade%in%c("5a","6a","6b+","7a","7b+","8a","8b+","9a")),"grade_index2"])
 	axis(2, grades_label$grade, at=grades_label$grade_index2, las=2,cex.axis=1.25)
@@ -131,5 +138,55 @@ png("Growth_elites.png",width=800,height=600)
 	lines(tmp, as.numeric(fixef(reg_gr)) + coef_growth$intercept[schab] + coef_growth$exp[schab] * tmp + coef_growth$exp2[schab] * (tmp^2) + coef_growth$exp3[schab] * (tmp^3) ,lwd=5 ,col=brewer.pal(6,"Set1")[6])
 	#	
 #
-legend("bottom",c("Adam Ondra","Stefano Ghisolfi","Sébastien Bouin","Jorge Diaz-Rullo","Ramón Julian Puigblanque","Piotr Schab"),col=brewer.pal(6,"Set1"),lwd=5)
+	legend("bottom",c("Adam Ondra","Stefano Ghisolfi","Sébastien Bouin","Jorge Diaz-Rullo","Ramón Julian Puigblanque","Piotr Schab"),col=brewer.pal(6,"Set1"),lwd=5)
+	par(new=TRUE)
+	axis(4,grades_label$gradeus,at=grades_label$grade_index2,las=2,cex.axis=1.25)
 dev.off()
+#
+
+
+
+png("Growth_elites2.png",width=800,height=600)
+	par(mar=c(5.1, 4.1, 4.1, 4.1))
+	plot(NA,xlim=c(0,20),ylim=c(5,9.15),xlab="Experience",ylab="Grade",yaxt="n",xaxt="n",cex.lab=1.5)
+	axis(1, seq(0,20,1), at = seq(0,20,1), las=1,cex.axis=1.25)
+	#axis(2, c("5a","6a","6b+","7a","7b+","8a","8b+","9a"), at=grades_label[which(grades_label$grade%in%c("5a","6a","6b+","7a","7b+","8a","8b+","9a")),"grade_index2"])
+	axis(2, grades_label$grade, at=grades_label$grade_index2, las=2,cex.axis=1.25)
+	#
+	abline(h=grades_label$grade_index2,lwd=.1,col="lightgray",lty=3)
+	#
+	for(i in 1:dim(coef_growth)[1]){
+		tmp = c(coef_growth$min_experience[i]:coef_growth$max_experience[i])
+		lines(tmp, as.numeric(fixef(reg_gr)) + coef_growth$intercept[i] + coef_growth$exp[i] * c(tmp) + coef_growth$exp2[i] * (tmp^2) + coef_growth$exp3[i] * (tmp^3) ,lwd=.01 ,col="lightskyblue1" )
+		#curve(coef(reg_fe)[1] + coef(reg_fe)[2] * x + coef(reg_fe)[3] * x^2, 0, 10, lwd=5, col="darkred" ,lty=1 ,add=T)
+	}
+	#
+	# Sachi Amma
+	plot_line(user=30100,col=1)
+	#
+	# Daniel Woods
+	plot_line(user=4102,col=2)
+	#
+	# Mathieu Bouyoud
+	plot_line(user=8345,col=3)
+	#
+	# David Graham 
+	plot_line(user=118,col=4)
+	#	
+	# Domen Škofic
+	plot_line(user=27591,col=5)
+	#
+	# Jernej Kruder 
+	plot_line(user=9886,col=6)
+	#
+	# Joe Kinder 
+	plot_line(user=476,col=7)
+	#
+	# Daniel Jung 
+	plot_line(user=3155,col=8)
+	#
+	legend("bottom",c("Sachi Amma","Daniel Woods","Mathieu Bouyoud","David Graham ","Domen Škofic","Jernej Kruder","Joe Kinder ","Daniel Jung"),col=brewer.pal(8,"Set1"),lwd=5)
+	par(new=TRUE)
+	axis(4,grades_label$gradeus,at=grades_label$grade_index2,las=2,cex.axis=1.25)
+dev.off()
+
