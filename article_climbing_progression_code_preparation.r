@@ -47,7 +47,7 @@ ascents$Go2 = as.numeric(grepl("Second Go",ascents$notes))
 ascents = ascents[,c("id","user_id","grade_id","method_id","OS","Flash","Go2","Style","date","year","crag_id","crag","sector_id","sector","name","country","rating","Trad","FA","Difficulty")]
 names(ascents)[which(names(ascents)=="id")] = "route_id"
 #
-dat = merge(ascents,climber,by="user_id",all=F)
+climbs = merge(ascents,climber,by="user_id",all=F)
 #
 #
 grades_label = data.frame(
@@ -57,21 +57,21 @@ grades_label = data.frame(
 	"grade_index2"=c(3,3+1/3,3+2/3,4,4+1/3,4+2/3,5,5+1/3,5+2/3,6,6+1/6,6+1/3,6.5,6+2/3,6+5/6,7,7+1/6,7+1/3,7.5,7+2/3,7+5/6,8,8+1/6,8+1/3,8.5,8+2/3,8+5/6,9,9+1/6,9+1/3,9.5,9+2/3))
 grades_label$grade_index = 1:dim(grades_label)[1]
 #
-dat = merge(dat,grades_label,"grade_id",all.x=T)
-dat = subset(dat,!is.na(grade_index))
+climbs = merge(climbs,grades_label,"grade_id",all.x=T)
+climbs = subset(climbs,!is.na(grade_index))
 # Focus on ascents 6a and harder
-#dat = dat[which(dat$grade_id>=36 & !(dat$grade_id%in%c(71,73))),] # 71,73 just a very few ascents
+#climbs = climbs[which(climbs$grade_id>=36 & !(climbs$grade_id%in%c(71,73))),] # 71,73 just a very few ascents
 #
 # https://www.8a.nu/scorecard/paolo-antoniotti/routes/?AscentClass=0&AscentListViewType=0&GID=176da43c4512d0a8a6e64f89793650ab
-dat = dat[which(dat$route_id!=2938504),] 
+climbs = climbs[which(climbs$route_id!=2938504),] 
 # 9a Onsight by deactivited climber
-dat = dat[which(dat$user_id!=32658),] 
+climbs = climbs[which(climbs$user_id!=32658),] 
 # Seems to be advertisment
-dat = dat[which(dat$user_id!=47989),] 
+climbs = climbs[which(climbs$user_id!=47989),] 
 #
 #
-#dat2 = aggregate(grade_id~method_id+user_id+height+weight+bmi+bmi2,dat,max)
-#dat2 = merge(dat2,grades_label,"grade_id",all.x=T)
+#climbs2 = aggregate(grade_id~method_id+user_id+height+weight+bmi+bmi2,climbs,max)
+#climbs2 = merge(climbs2,grades_label,"grade_id",all.x=T)
 #
 #
 boulder = lDataFrames[[1]]
@@ -117,7 +117,10 @@ grades_bouldern = data.frame(
 	"font" = c("3A","3B","3C","4A","4B","4C","5A","5B","5C","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","9A"),
 	"v" = c("VB","VB","VB","V0-","V0-/V0","V0","V0+","V1","V1/V2","V2","V2/V3","V3","V3/V4","V4","V4/V5","V5","V6","V7","V8","V9","V10","V11","V12","V13","V14","V15","V16","V17")
 )
+grades_bouldern$grade_index = 1:dim(grades_bouldern)[1]
 #
-boulder = merge(boulder,grades_label,"grade_id",all.x=T)
+boulder = merge(boulder,grades_bouldern,"grade_id",all.x=T)
 boulder = subset(boulder,!is.na(grade_index))
 #
+climbs$climb = 1
+boulder$boulder = 1 

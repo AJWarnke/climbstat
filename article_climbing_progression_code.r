@@ -25,9 +25,9 @@ library(doParallel)
 cl <- makePSOCKcluster(detectCores())
 registerDoParallel(cl)
 #
-source("Data_Prep_8a.r")
+source("article_climbing_progression_code_preparation.r")
 # 
-gr = dat
+gr = climbs
 #
 gr = gr %>% filter(Style=="Redpoint")
 gr = gr %>% filter(Trad==0 & FA==0)
@@ -109,8 +109,12 @@ linearHypothesis(reg_lm_joint, c("experience:sex", "sex:experience2", "sex:exper
 #
 coef_growth = coef_growth[complete.cases(coef_growth),]
 #
-png("Growth.png",width=800,height=600)
+
+png("../graphs/article_climbing_progression_graph.png",width=800,height=600)
+	par(mar=c(5.1, 4.1, 4.1, 4.1))
 	plot(NA,xlim=c(0,12),ylim=c(5,9),xlab="Experience",ylab="Grade",yaxt="n",xaxt="n",cex.lab=1.5)
+	mtext(side=3, line=2, cex=1.7, "Progression in Rock Climbing")
+	mtext(side=3, line=0.5, cex=1, "climbstat.blogspot.com", font=3)
 	axis(1, seq(0,12,1), at = seq(0,12,1), las=1,cex.axis=1.25)
 	#axis(2, c("5a","6a","6b+","7a","7b+","8a","8b+","9a"), at=grades_label[which(grades_label$grade%in%c("5a","6a","6b+","7a","7b+","8a","8b+","9a")),"grade_index2"])
 	axis(2, grades_label$grade, at=grades_label$grade_index2, las=2,cex.axis=1.25)
@@ -128,5 +132,7 @@ png("Growth.png",width=800,height=600)
 	curve(coef(reg_lm_female)[1] + coef(reg_lm_female)[2] * x + coef(reg_lm_female)[3] * x^2 + coef(reg_lm_female)[4] * x^3, 0, 12, lwd=5, col="red" ,lty=1 ,add=T)
 	curve(coef(reg_lm_male)[1] + coef(reg_lm_male)[2] * x + coef(reg_lm_male)[3] * x^2 + coef(reg_lm_male)[4] * x^3, 0, 12, lwd=5, col="blue" ,lty=1 ,add=T)
 	legend("bottom",c("males","females"),col=c("blue","red"),lwd=5,cex=1.5)
+	par(new=TRUE)
+	axis(4,grades_label$gradeus,at=grades_label$grade_index2,las=2,cex.axis=1.25)
 dev.off()
 #

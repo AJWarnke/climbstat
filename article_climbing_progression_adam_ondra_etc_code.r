@@ -7,7 +7,7 @@ source("system.r")
 plot_line = function(user=x,col=1) {
 	tmp_data = which(coef_growth$user_id==user)
 	tmp = c(coef_growth$min_experience[tmp_data]:coef_growth$max_experience[tmp_data])
-	lines(tmp, as.numeric(fixef(reg_gr)) + coef_growth$intercept[tmp_data] + coef_growth$exp[tmp_data] * tmp + coef_growth$exp2[tmp_data] * (tmp^2) + coef_growth$exp3[tmp_data] * (tmp^3) ,lwd=5 ,col=brewer.pal(8,"Set1")[col])
+	lines(tmp, as.numeric(fixef(reg_gr)) + coef_growth$intercept[tmp_data] + coef_growth$exp[tmp_data] * tmp + coef_growth$exp2[tmp_data] * (tmp^2) + coef_growth$exp3[tmp_data] * (tmp^3) ,lwd=5 ,col=brewer.pal(8,"Set3")[col])
 }
 #
 options(tibble.width = Inf)
@@ -17,6 +17,7 @@ library(RSQLite)
 library(quantreg)
 library(RColorBrewer)
 library(np)
+library(plyr)
 library(dplyr)
 library(speedglm)
 library(rqPen)
@@ -30,9 +31,9 @@ library(doParallel)
 cl <- makePSOCKcluster(detectCores())
 registerDoParallel(cl)
 #
-source("Climb_R_0_Main_new.r")
+source("article_climbing_progression_code_preparation.r")
 # 
-gr = dat
+gr = climbs
 #
 gr = gr %>% filter(Style=="Redpoint")
 gr = gr %>% filter(Trad==0 & FA==0)
@@ -97,9 +98,13 @@ coef_growth$user_id = rownames(coef_growth)
 coef_growth = merge(coef_growth,gr[!duplicated(gr$user_id),c("user_id","sex","experience","experience2","experience3","start_age","min_experience","max_experience")],"user_id",all.x=T,all.y=F)
 coef_growth = coef_growth[complete.cases(coef_growth),]
 #
-png("Growth_elites.png",width=800,height=600)
+#
+png("../graphs/article_climbing_progression_adam_ondra_etc_graph_1v2.png",width=800,height=600)
 	par(mar=c(5.1, 4.1, 4.1, 4.1))
 	plot(NA,xlim=c(0,20),ylim=c(5,9.15),xlab="Experience",ylab="Grade",yaxt="n",xaxt="n",cex.lab=1.5)
+	mtext(side=3, line=2, cex=1.7, "Progression of Elite Climbers (Part 1)")
+	mtext(side=3, line=0.5, cex=1, "climbstat.blogspot.com", font=3)
+	
 	axis(1, seq(0,20,1), at = seq(0,20,1), las=1,cex.axis=1.25)
 	#axis(2, c("5a","6a","6b+","7a","7b+","8a","8b+","9a"), at=grades_label[which(grades_label$grade%in%c("5a","6a","6b+","7a","7b+","8a","8b+","9a")),"grade_index2"])
 	axis(2, grades_label$grade, at=grades_label$grade_index2, las=2,cex.axis=1.25)
@@ -138,17 +143,18 @@ png("Growth_elites.png",width=800,height=600)
 	lines(tmp, as.numeric(fixef(reg_gr)) + coef_growth$intercept[schab] + coef_growth$exp[schab] * tmp + coef_growth$exp2[schab] * (tmp^2) + coef_growth$exp3[schab] * (tmp^3) ,lwd=5 ,col=brewer.pal(6,"Set1")[6])
 	#	
 #
-	legend("bottom",c("Adam Ondra","Stefano Ghisolfi","Sébastien Bouin","Jorge Diaz-Rullo","Ramón Julian Puigblanque","Piotr Schab"),col=brewer.pal(6,"Set1"),lwd=5)
+	legend("bottom", c("Adam Ondra","Stefano Ghisolfi","Sébastien Bouin","Jorge Diaz-Rullo","Ramón Julian Puigblanque","Piotr Schab"), col=brewer.pal(6,"Set1"), lwd=5, cex=1.25)
 	par(new=TRUE)
 	axis(4,grades_label$gradeus,at=grades_label$grade_index2,las=2,cex.axis=1.25)
 dev.off()
 #
-
-
-
-png("Growth_elites2.png",width=800,height=600)
+#
+png("../graphs/article_climbing_progression_adam_ondra_etc_graph_2v2.png",width=800,height=600)
 	par(mar=c(5.1, 4.1, 4.1, 4.1))
-	plot(NA,xlim=c(0,20),ylim=c(5,9.15),xlab="Experience",ylab="Grade",yaxt="n",xaxt="n",cex.lab=1.5)
+	plot(NA,xlim=c(0,20),ylim=c(5,9.15),xlab="Experience",ylab="Grade",yaxt="n",xaxt="n",cex.lab=1.5,main="",sub="")
+	mtext(side=3, line=2, cex=1.7, "Progression of Elite Climbers (Part 2)")
+	mtext(side=3, line=0.5, cex=1, "climbstat.blogspot.com", font=3)
+	
 	axis(1, seq(0,20,1), at = seq(0,20,1), las=1,cex.axis=1.25)
 	#axis(2, c("5a","6a","6b+","7a","7b+","8a","8b+","9a"), at=grades_label[which(grades_label$grade%in%c("5a","6a","6b+","7a","7b+","8a","8b+","9a")),"grade_index2"])
 	axis(2, grades_label$grade, at=grades_label$grade_index2, las=2,cex.axis=1.25)
@@ -185,8 +191,8 @@ png("Growth_elites2.png",width=800,height=600)
 	# Daniel Jung 
 	plot_line(user=3155,col=8)
 	#
-	legend("bottom",c("Sachi Amma","Daniel Woods","Mathieu Bouyoud","David Graham ","Domen Škofic","Jernej Kruder","Joe Kinder ","Daniel Jung"),col=brewer.pal(8,"Set1"),lwd=5)
+	legend("bottom", c("Sachi Amma","Daniel Woods","Mathieu Bouyoud","David Graham ","Domen Škofic","Jernej Kruder","Joe Kinder ","Daniel Jung"), col=brewer.pal(8,"Set3"), lwd=5, ncol=2, cex=1.25)
 	par(new=TRUE)
 	axis(4,grades_label$gradeus,at=grades_label$grade_index2,las=2,cex.axis=1.25)
 dev.off()
-
+#
