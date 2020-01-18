@@ -7,3 +7,5 @@ needs_to_be_cleaned/
 unpublished/
 *.png
 data/Climbers_9a+_plus.txt
+data/Ascents_9a+_plus.txt
+.gitignore
