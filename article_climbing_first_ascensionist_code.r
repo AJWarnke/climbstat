@@ -1,21 +1,25 @@
+rm(list=ls(all=TRUE))
+# Set Language
+Sys.setenv(LANGUAGE="en")
+# US / French grades and numeric translation
 grades_label = data.frame(
 	"grade_id" = c(13, 15, 17, 21, 23, 25, 29, 31, 33, 36, 38, 40, 42, 44, 46, 49, 51, 53, 55, 57, 59, 62, 64, 66, 68, 70, 72, 75, 77, 79, 81, 83), 
 	"grade" = c("3a", "3b", "3c", "4a", "4b", "4c", "5a", "5b", "5c", "6a", "6a+", "6b", "6b+", "6c", "6c+", "7a", "7a+", "7b", "7b+", "7c", "7c+", "8a", "8a+", "8b", "8b+", "8c", "8c+", "9a", "9a+", "9b", "9b+", "9c"), 
 	"gradeus" = c("", "", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9", "5.10a", "5.10b", "5.10c", "5.10d", "5.11a", "5.11b", "5.11c", "5.11d", "5.12a", "5.12b", "5.12c", "5.12d", "5.13a", "5.13b", "5.13c", "5.13d", "5.14a", "5.14b", "5.14c", "5.14d", "5.15a", "5.15b", "5.15c", "5.15d"), 
 	"grade_index2" = c(3, 3+1/3, 3+2/3, 4, 4+1/3, 4+2/3, 5, 5+1/3, 5+2/3, 6, 6+1/6, 6+1/3, 6.5, 6+2/3, 6+5/6, 7, 7+1/6, 7+1/3, 7.5, 7+2/3, 7+5/6, 8, 8+1/6, 8+1/3, 8.5, 8+2/3, 8+5/6, 9, 9+1/6, 9+1/3, 9.5, 9+2/3))
 grades_label$grade_index = 1:dim(grades_label)[1]
-#
-fa = read.table("../data/first_ascents.txt", header = TRUE, sep = "\t", encoding = "UTF-8")
-#
+# Read data
+fa = read.table("./data/first_ascents.txt", header = TRUE, sep = "\t", encoding = "UTF-8")
+# Limit to 'redpoint' ascents
 rp = subset(fa, style = "Redpoint" & grade_x_ascent == 1 & ascensionist != "Fred Rouhling")
 rp = rp[order(rp$sex, rp$year), ]
-#
+# Add latest year for nicer formatting
 rp = rbind(rp, rep(NA, dim(rp)[2]))
 rp[dim(rp)[1], "year"] = as.numeric(format(Sys.time(), "%Y"))
-#
+# Get values for x-axis
 tmp_x = min(rp$year):max(rp$year)
 #
-# Export data
+# Export data to Upload to Google Drive
 export_data = rp[, c("year", "ascensionist", "route", "crag", "gradeus", "grade", "sex", "confirmed", "source")]
 export_data$source = as.character(export_data$source)
 export_data = export_data[!is.na(export_data$ascensionist), ]
@@ -24,7 +28,7 @@ export_data[which(export_data$year == 2012), "source"] = "https://www.planetmoun
 export_data[which(export_data$year == 2017), "source"] = "https://www.planetmountain.com/en/news/interviews/adam-ondra-climbs-worlds-first-9c-at-flatanger-in-norway.html"
 write.csv(export_data, file = "../data/ascensionist_table.csv", row.names = FALSE)
 ########################################
-#### One graph 
+#### One graph Female and males combined
 png(paste0("../graphs/ascensionists_over_time.png"), width = 1000, height = 600)
 	par(mar = c(8, 6, 4, 4) + 0.1)
 	plot((min(rp$year)):(max(rp$year)), rep(NA, length(tmp_x)), ylim = c(6.9, 9.75), yaxt = "n", xaxt = "n", xlab = "", ylab = "", cex.axis = 1.5)
@@ -47,7 +51,7 @@ png(paste0("../graphs/ascensionists_over_time.png"), width = 1000, height = 600)
 	text(x = corners[2] + 3.75, y = mean(corners[3:4]), "Grades (French)", srt = 270, cex = 1.5)
 dev.off()
 ########################################
-#### Males for GIF
+#### Male graphs to be combined as GIF
 k = 1
 for(i in 1:dim(rp[which(rp$sex == "male"), ])[1]) {
 	png(paste0("../graphs/ascensionists/male_", k, ".png"), width = 1000, height = 600)
@@ -87,7 +91,7 @@ for(i in 1:dim(rp[which(rp$sex == "male"), ])[1]) {
 }
 #
 ########################################
-# Females for GIF
+# Female graphs to be combined as GIF
 k = 1
 for(i in 1:dim(rp[which(rp$sex == "female"), ])[1]) {
 	png(paste0("../graphs/ascensionists/female_", k, ".png"), width = 1000, height = 600)
