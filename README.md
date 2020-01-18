@@ -6,7 +6,8 @@ Here you can find the R code for data preparation, visualization and statistical
 
 ### Article **First Ascentionists Over Time (Female and Male)**
 
-1. Raw Data 
+1. [Raw Data](https://github.com/AJWarnke/climbstat/blob/master/data/first_ascents.txt)
+2. [R-Script](https://github.com/AJWarnke/climbstat/blob/master/article_climbing_first_ascensionist_code.r)
 
 
  
