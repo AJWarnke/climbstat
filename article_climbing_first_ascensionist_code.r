@@ -1,3 +1,8 @@
+###
+# Article: First Ascentionists Over Time (Female and Male)
+# URL: http://climbstat.blogspot.com/2020/01/first-ascentionists-over-time-male.html
+# Author: Arne Jonas Warnke (arne.warnke at gmail.com)
+###
 rm(list=ls(all=TRUE))
 # Set Language
 Sys.setenv(LANGUAGE="en")
